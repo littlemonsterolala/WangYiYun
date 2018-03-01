@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'/>
+        <style type='text/css'>
+            body{
+                margin:0;
+                padding:0;
+                width:1349px;
+            }
+            #container{
+                width:1349px;
+                height:336px;
+                background-color: black;
+            }
+            #photos{
+                margin: 0;
+                position: absolute;
+                left:200px;
+                width:730px;
+                height:336px;
+            }
+            .pictures{
+                position: absolute;
+                width:730px;
+                height:336px;
+                list-style: none;
+            }
+            #arrows{
+                position: absolute;
+                width: 800px;
+                height:336px;
+                margin-top:130px;
+                margin-left:-30px;
+            }
+            .arrow{
+                font-size: 2.5em;
+                background-color: rgb(144,144,144,0.1);
+                color:white;
+                width:30px;
+                cursor: pointer;
+            }
+            #buttons{
+                position: absolute;
+                margin-top: -10px;
+                margin-left:560px;
+                z-index: 4;
+            }
+            .button{
+                width:6px;
+                height:6px;
+                border-radius: 3px;
+                background-color:grey;
+                float:left;
+                margin-right: 6px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='container'>
+            <ul id='photos'>
+                <li class='pictures' id='#000000' style='z-index: 2;'><img src='1.jpg'></li>
+                <li class='pictures' id='#102329'><img src='2.jpg'></li>
+                <li class='pictures' id='#010006'><img src='3.jpg'></li>
+                <li class='pictures' id='#111A29'><img src='4.jpg'></li>
+                <li class='pictures' id='#38373D'><img src='5.jpg'></li>
+                <li class='pictures' id='#F3EDED'><img src='6.jpg'></li>
+                <li class='pictures' id='#188987'><img src='7.jpg'></li>
+                <div id='arrows'>
+                <span class='arrow' title='left'><</span>
+                <span class='arrow' title='right' style='float: right;'>></span>
+                </div>
+            </ul>
+        </div>
+        <div id='buttons'>
+                <span class='button' style='background-color: red;'></span>
+                <span class='button'></span>
+                <span class='button'></span>
+                <span class='button'></span>
+                <span class='button'></span>
+                <span class='button'></span>
+                <span class='button'></span> 
+        </div>
+        <script>
+            var count = 0;  //定义图片变更次数
+            var FI=null; //存储淡入interval循环
+            var timer=null;//存储轮播interval循环
+            var fullBox = document.getElementById('container');//用于设置背景颜色
+            var pictures=document.getElementsByClassName('pictures');//存储图片
+            var arrow=document.getElementsByClassName('arrow');//存储左右箭头
+            var button=document.getElementsByClassName('button');//存储下部圆圈
+            var percent = 0;//淡入循环变量
+            function fadeIn(){//淡入函数
+                    FI = setInterval(function (){
+                    percent += 0.010000; //精确浮点数精度
+                    if(percent>=1){clearInterval(FI);}
+                    else{
+                        pictures[count].style.opacity=percent;}
+                    },10);
+                    percent = 0;}
+            function pic(){//图像变换函数
+                for(var i=0;i<pictures.length;i++){
+                  pictures[i].style.opacity=0;};//所有图片透明
+                fullBox.style.backgroundColor = pictures[count].id//背景图片颜色等于相应图片的id
+                for(var c=0;c<button.length;c++){//底部按钮颜色变化
+                    button[c].style.backgroundColor = 'grey';
+                };
+                button[count].style.backgroundColor='red';    
+            }
+            
+            //主轮播循环
+            showtime();
+            function showtime(){timer=setInterval(show,4000)};
+            function show(){//轮播循环函数
+                count ++;
+                if(count > pictures.length - 1){
+                count = 0;};
+                fadeIn();               
+                pic();
+            }
+            
+            //左右箭头
+            for(var i=0;i<arrow.length;i++){
+                arrow[i].onmouseover=function(){
+                    clearInterval(timer);
+                };
+                arrow[i].onmouseout=function(){
+                    showtime();
+                };
+                arrow[i].onclick=function(){
+                    if(this.title == 'left'){
+                        count--;
+                        if(count < 0){count = pictures.length - 1;}
+                    }else{
+                        count++;
+                        if(count>pictures.length - 1){count = 0;}
+                    };
+                fadeIn();
+                pic();
+                }
+            }
+            //底部圆点
+            for(var i=0;i<button.length;i++){
+                button[i].index = i;
+                button[i].onmouseover=function(){
+                    clearInterval(timer);
+                    count = this.index;//确保count值不会出错
+                    fadeIn();
+                    pic();
+                };
+                button[i].onmouseout=function(){showtime()};
+                }
+        </script>
+    </body>
+</html>
